@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>মায়াঘর | Admin Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#7c3aed,#4c1d95);
+    overflow:hidden;
+}
+
+/* 🔮 floating glow */
+body::before, body::after{
+    content:"";
+    position:absolute;
+    width:300px;height:300px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.1);
+    animation:float 6s infinite ease-in-out;
+}
+
+body::after{
+    left:70%;
+    top:60%;
+    animation-delay:2s;
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-30px);}
+}
+
+/* 💎 glass card */
+.login-box{
+    backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.1);
+    border-radius:20px;
+    padding:30px;
+    width:100%;
+    max-width:360px;
+    color:#fff;
+    box-shadow:0 10px 40px rgba(0,0,0,0.3);
+    text-align:center;
+    animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(20px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+.brand{
+    font-size:26px;
+    font-weight:600;
+    margin-bottom:5px;
+}
+
+.tagline{
+    font-size:13px;
+    opacity:0.8;
+    margin-bottom:20px;
+}
+
+/* input */
+.input-group{
+    margin-bottom:15px;
+    position:relative;
+}
+
+.input-group input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    outline:none;
+}
+
+/* 👁️ eye */
+.eye-btn{
+    position:absolute;
+    right:10px;
+    top:12px;
+    cursor:pointer;
+}
+
+/* button */
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#fff;
+    color:#7c3aed;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#ddd;
+}
+
+.loading{
+    display:none;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <div class="brand">✨ মায়াঘর</div>
+    <div class="tagline">Family Mart Management System</div>
+
+    <div class="input-group">
+        <input type="email" id="email" placeholder="ইমেইল দিন">
+    </div>
+
+    <div class="input-group">
+        <input type="password" id="password" placeholder="পাসওয়ার্ড দিন">
+        <span class="eye-btn" onclick="togglePass()">👁️</span>
+    </div>
+
+    <button onclick="login()">লগইন করুন</button>
+
+    <div class="loading" id="loading">⏳ লগইন হচ্ছে...</div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = { apiKey: "AIzaSyCLZzGnUqd0WbUp0a3zJ-DgBgB30JefTLY", authDomain: "mayaghor-si.firebaseapp.com", projectId: "mayaghor-si", storageBucket: "mayaghor-si.firebasestorage.app", messagingSenderId: "492724982535", appId: "1:492724982535:web:92d1f0e6c0ae0094666ba2", measurementId: "G-VCS0364R4F" };
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// 👁️ show/hide password
+function togglePass(){
+    const pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+
+// 🔐 login
+function login(){
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('password').value;
+
+    if(!email || !pass){
+        alert("সব তথ্য দিন");
+        return;
+    }
+
+    document.getElementById('loading').style.display="block";
+
+    auth.signInWithEmailAndPassword(email, pass)
+    .then(()=>{
+        window.location.href="index.html";
+    })
+    .catch(()=>{
+        alert("লগইন ব্যর্থ ❌");
+        document.getElementById('loading').style.display="none";
+    });
+}
+
+// 🔒 already login
+auth.onAuthStateChanged(user=>{
+    if(user){
+        window.location.href="index.html";
+    }
+});
+</script>
+
+</body>
+</html>
